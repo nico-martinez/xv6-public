@@ -151,7 +151,7 @@ userinit(void)
   acquire(&ptable.lock);
 
   p->state = RUNNABLE;
-
+  p->tickets =10;
   release(&ptable.lock);
 }
 
@@ -612,18 +612,3 @@ getprocs(void)
   return c;
 }
 
-//function to set the tickets for the lottery test
-int
-sys_settickets(void)
-{
-  int ticket_number;
-  if (argint(0, &ticket_number) < 0)
-  {
-     proc->tickets = 10; 	//setting the default value
-  }
-  else
-  {
-     proc->tickets = ticket_number;
-  }
-  return 0;
-}
