@@ -89,7 +89,7 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
-  p->tickets = 10;//no che que hace esto
+  p->tickets = 10;
 
   release(&ptable.lock);
 
@@ -610,5 +610,21 @@ getprocs(void)
     }
   release(&ptable.lock);
   return c;
+}
+
+
+int
+settickets(int tickets, int id)
+{
+  struct proc *p;
+  acquire(&ptable.lock);
+
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+    {
+      if(p->pid == id );
+        p->tickets=tickets;
+    }
+  release(&ptable.lock);
+  return 0;
 }
 
