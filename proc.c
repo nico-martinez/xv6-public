@@ -614,7 +614,7 @@ getprocs(void)
 
 
 int
-settickets(int tickets, int id)
+settickets(int ticket, int id)
 {
   struct proc *p;
   acquire(&ptable.lock);
@@ -622,7 +622,7 @@ settickets(int tickets, int id)
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
     {
       if(p->pid == id );
-        p->tickets=tickets;
+        p->tickets=ticket;
     }
   release(&ptable.lock);
   return 0;
