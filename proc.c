@@ -330,7 +330,8 @@ scheduler(void)
 
   int counter=0, number_tickets=0, winner=0;
   
-  for(;;){//es como un while true
+  for(;;)
+  {//es como un while true
     // Enable interrupts on this processor.
     sti();
     acquire(&ptable.lock);
@@ -358,7 +359,6 @@ scheduler(void)
         if ((counter + p->tickets) < winner)//se busca el ticket ganador
         {
           counter += p->tickets;
-          continue;
         }
         else//aqui ya pasamos el ticket ganador por tanto ese es el proceso que debe ejecutarse
         {
@@ -374,12 +374,13 @@ scheduler(void)
 
           // Process is done running for now.
           // It should have changed its p->state before coming back.
-          proc = 0;
+          c->proc = 0;
           break;
         }
       }
     }
     release(&ptable.lock);
+  }
 }
 
 /*
@@ -613,13 +614,15 @@ getprocs(void)
 
 //function to set the tickets for the lottery test
 int
-sys_settickets(void){
+sys_settickets(void)
+{
   int ticket_number;
   if (argint(0, &ticket_number) < 0)
   {
      proc->tickets = 10; 	//setting the default value
   }
-  else{
+  else
+  {
      proc->tickets = ticket_number;
   }
   return 0;
