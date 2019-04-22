@@ -354,7 +354,7 @@ scheduler(void)
       {}
       else
       {
-        if ((counter + p->tickets) < golden_ticket)//se busca el ticket ganador
+        if ((counter + p->tickets) < winner)//se busca el ticket ganador
         {
           counter += p->tickets;
           continue;
