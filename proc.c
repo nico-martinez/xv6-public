@@ -6,7 +6,7 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
-#include <stdlib.h>
+#include "rand.h"
 
 struct {
   struct spinlock lock;
@@ -89,6 +89,7 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  p->tickets = 10;//no che que hace esto
 
   release(&ptable.lock);
 
@@ -328,7 +329,6 @@ scheduler(void)
   c->proc = 0;
 
   int counter=0, number_tickets=0, winner=0;
-  srand(time(NULL));  
   
   for(;;){//es como un while true
     // Enable interrupts on this processor.
@@ -347,7 +347,7 @@ scheduler(void)
       }
     }
     // elegir el ganador
-    winner=rand()%(number_tickets);
+    winner=random_at_most(number_tickets);
     //buscar el proceso ganador wiii
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
     {
@@ -609,4 +609,18 @@ getprocs(void)
     }
   release(&ptable.lock);
   return c;
+}
+
+//function to set the tickets for the lottery test
+int
+sys_settickets(void){
+  int ticket_number;
+  if (argint(0, &ticket_number) < 0)
+  {
+     proc->tickets = 10; 	//setting the default value
+  }
+  else{
+     proc->tickets = ticket_number;
+  }
+  return 0;
 }
