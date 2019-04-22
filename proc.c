@@ -6,6 +6,7 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include <stdlib.h>
 
 struct {
   struct spinlock lock;
@@ -326,7 +327,7 @@ scheduler(void)
   struct cpu *c = mycpu();
   c->proc = 0;
 
-  int counter, number_tickets, winner;
+  int counter=0, number_tickets=0, winner=0;
   srand(time(NULL));  
   
   for(;;){//es como un while true
