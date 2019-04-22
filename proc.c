@@ -323,6 +323,8 @@ void
 scheduler(void)
 {
   struct proc *p;
+  struct cpu *c = mycpu();
+  c->proc = 0;
 
   int counter, number_tickets, winner;
   srand(time(NULL));  
