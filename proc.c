@@ -323,10 +323,69 @@ void
 scheduler(void)
 {
   struct proc *p;
+
+  int counter, number_tickets, winner;
+  srand(time(NULL));  
+  
+  for(;;){//es como un while true
+    // Enable interrupts on this processor.
+    sti();
+    acquire(&ptable.lock);
+
+    winner = 0;
+    counter = 0;
+    number_tickets = 0;
+    //contar el total de tickets de procesows a ejecutar para realizar la loteria
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+    {
+      if(p->state==RUNNABLE)
+      {
+        number_tickets +=p->tickets;
+      }
+    }
+    // elegir el ganador
+    winner=rand()%(number_tickets);
+    //buscar el proceso ganador wiii
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+    {
+      if(p->state != RUNNABLE)//primero verificar solo los procesos que estes ready (que s epuedan ejecutar)
+      {}
+      else
+      {
+        if ((counter + p->tickets) < golden_ticket)//se busca el ticket ganador
+        {
+          counter += p->tickets;
+          continue;
+        }
+        else//aqui ya pasamos el ticket ganador por tanto ese es el proceso que debe ejecutarse
+        {
+          // Switch to chosen process.  It is the process's job
+          // to release ptable.lock and then reacquire it
+          // before jumping back to us.
+          c->proc = p;
+          switchuvm(p);
+          p->state = RUNNING;
+
+          swtch(&(c->scheduler), p->context);
+          switchkvm();
+
+          // Process is done running for now.
+          // It should have changed its p->state before coming back.
+          proc = 0;
+          break;
+        }
+      }
+    }
+    release(&ptable.lock);
+}
+
+/*
+{
+  struct proc *p;
   struct cpu *c = mycpu();
   c->proc = 0;
   
-  for(;;){
+  for(;;){//es como un while true
     // Enable interrupts on this processor.
     sti();
 
@@ -353,7 +412,7 @@ scheduler(void)
     release(&ptable.lock);
 
   }
-}
+}*/
 
 // Enter scheduler.  Must hold only ptable.lock
 // and have changed proc->state. Saves and restores
