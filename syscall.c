@@ -104,7 +104,7 @@ extern int sys_wait(void);
 extern int sys_write(void);
 extern int sys_uptime(void);
 extern int sys_getprocs(void);
-extern int sys_settickets(void);
+extern int sys_settickets(int ticket, int id);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
