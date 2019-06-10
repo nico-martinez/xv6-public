@@ -613,18 +613,212 @@ getprocs(void)
 }
 
 
-int
-settickets(int ticket, int id)
+/*
+int 
+traducir(char* s)
 {
-  struct proc *p;
-  acquire(&ptable.lock);
+  argstr(0, &s);
+  char bin[32]='';
+  int i=0;
+  struct proc *p=myproc();
+  pde_t* ptable=p->pgdir
 
-  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+  //from str hex to  str bin
+  for(i=0; s[i]!='\0'; i++)
     {
-      if(p->pid == id );
-        p->tickets=ticket;
+        switch(s[i])
+        {
+            case '0':
+                bin[i+0]= '0';
+                bin[i+1]= '0';
+                bin[i+2]= '0';
+                bin[i+3]= '0';
+                i=i+4;
+                break;
+            case '1':
+                bin[i+0]= '0';
+                bin[i+1]= '0';
+                bin[i+2]= '0';
+                bin[i+3]= '1';
+                i=i+4;
+                break;
+            case '2':
+                bin[i+0]= '0';
+                bin[i+1]= '0';
+                bin[i+2]= '1';
+                bin[i+3]= '0';
+                i=i+4;
+                break;
+            case '3':
+                bin[i+0]= '0';
+                bin[i+1]= '0';
+                bin[i+2]= '1';
+                bin[i+3]= '1';
+                i=i+4;
+                break;
+            case '4':
+                bin[i+0]= '0';
+                bin[i+1]= '1';
+                bin[i+2]= '0';
+                bin[i+3]= '0';
+                i=i+4;
+                break;
+            case '5':
+                bin[i+0]= '0';
+                bin[i+1]= '1';
+                bin[i+2]= '0';
+                bin[i+3]= '1';
+                i=i+4;
+                break;
+            case '6':
+                bin[i+0]= '0';
+                bin[i+1]= '1';
+                bin[i+2]= '1';
+                bin[i+3]= '0';
+                i=i+4;
+                break;
+            case '7':
+                bin[i+0]= '0';
+                bin[i+1]= '1';
+                bin[i+2]= '1';
+                bin[i+3]= '1';
+                i=i+4;
+                break;
+            case '8':
+                bin[i+0]= '1';
+                bin[i+1]= '0';
+                bin[i+2]= '0';
+                bin[i+3]= '0';
+                i=i+4;
+                break;
+            case '9':
+                bin[i+0]= '1';
+                bin[i+1]= '0';
+                bin[i+2]= '0';
+                bin[i+3]= '1';
+                i=i+4;
+                break;
+            case 'a':
+            case 'A':
+                bin[i+0]= '1';
+                bin[i+1]= '0';
+                bin[i+2]= '1';
+                bin[i+3]= '0';
+                i=i+4;
+                break;
+            case 'b':
+            case 'B':
+                bin[i+0]= '1';
+                bin[i+1]= '0';
+                bin[i+2]= '1';
+                bin[i+3]= '1';
+                i=i+4;
+                break;
+            case 'c':
+            case 'C':
+                bin[i+0]= '1';
+                bin[i+1]= '1';
+                bin[i+2]= '0';
+                bin[i+3]= '0';
+                i=i+4;
+                break;
+            case 'd':
+            case 'D':
+                bin[i+0]= '1';
+                bin[i+1]= '1';
+                bin[i+2]= '0';
+                bin[i+3]= '1';
+                i=i+4;
+                break;
+            case 'e':
+            case 'E':
+                bin[i+0]= '1';
+                bin[i+1]= '1';
+                bin[i+2]= '1';
+                bin[i+3]= '0';
+                i=i+4;
+                break;
+            case 'f':
+            case 'F':
+                bin[i+0]= '1';
+                bin[i+1]= '1';
+                bin[i+2]= '1';
+                bin[i+3]= '1';
+                i=i+4;
+                break;
+            default:
+                printf("Invalid hexadecimal input.");
+        }
     }
-  release(&ptable.lock);
-  return 0;
+  //separar partes
+  char index[10]; char PTE[10]; //char offset[12];
+  for(int i=0;i<10;i++)
+  {
+    index[i]= ((int)bin[i]; //level 1 ptable
+    PTE[i]=bin[i+10]; //level 2 ptable
+    //offset[i]=bin[i+20];
+  }
+  //offset[10]=bin[30]; offset[11]=bin[31];
+
+  //from str bin to  int decimal
+  uint index_int=0,PTE_int=0
+  while (*index)
+	{
+    index_int *= 2;
+    if (*index++ == '1') index_int += 1;
+	}
+  while (*PTE)
+	{
+    PTE_int *= 2;
+    if (*PTE++ == '1') PTE_int += 1;
+	}
+  uint c=PTE_ADDR()
+  safestrcpy(bin,ptable[index_int],32)
+  // ahora acceder a las table
+  //hay q limpiar las cositas para quedrme solo con p bits
+  return (ptable[index_int])[PTE_int]
+
+}
+*/
+
+//basarse en vm.c walkpgdir
+//pdx() bits nivel 1 directory
+//ptx() bits nivel 2 table
+uint 
+traducir(char* s)
+{
+  const void *va = (void*)va_int;
+  uint physical_address;
+  char bin[32]='';
+  int i=0;  
+
+  struct proc *p=myproc();
+  pde_t *pgdir,*pde; 
+  pte_t *pgtab;
+  //pde directory pte table?
+  struct proc *p=myproc();
+  pgdir=p->pgdir
+  // guardo en pde donde esta almacenada la direccion de memoria en pgdir (la de la page table)
+  // *pde es la direccion de la ptable
+  // pde es la direccion ("cajita") de la dirrecion de la ptable
+  pde = &pgdir[PDX(va)];
+  if(!(*pde & PTE_P))
+  {
+    return -1;
+  }
+  else
+  {
+    // guardo en pgtab la direccion del page table (pasando de fisica a virtual, ni idea por que) 
+    // agarro lo que necesito de *pde  (20 bits) (y lo paso a virtual, ni idea por que)
+    pgtab = (pte_t*)P2V(PTE_ADDR(*pde));
+  }
+  
+  //ahora que tengo la ptable me meto a la casilla que me interesa y la amndo a fisico
+  pte_t *pte;
+  pte = &pgtab[PTX(va)];
+  physical_address=(uint) V2P(PTE_ADDR(*pte));
+
+  return physical_address;
+
 }
 

@@ -94,16 +94,12 @@ int
 sys_getprocs(void)
 {
   return getprocs();
-  /*
-  int c=0;
-  struct proc *p;
-  acquire(&ptable.lock);
+}
 
-  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
-    {
-      if(p->state == RUNNING) // UNUSED, EMBRYO, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
-        c++;
-    }
-  return c;
-  */
+uint
+sys_traducir(char *s)
+{
+  argstr(0, &s);
+  uint pa=traducir(s);
+  return pa;
 }

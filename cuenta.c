@@ -2,7 +2,9 @@
 #include "stat.h"
 #include "user.h"
 
-int main(void) {
- printf(1,"La cantidad de procesos en ejecucion en la CPU es %d\n", getprocs());
- exit();
+int main(int argc,char *argv[])
+{
+    char *va =argv[1];
+    printf(1,"\n Direccion fisica: %u",traducir(va));
+    exit();
 }
