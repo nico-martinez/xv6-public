@@ -793,7 +793,7 @@ traducir(char* s)
   struct proc *p=myproc();
   pde_t *pgdir,*pde; 
   pte_t *pgtab;
-  pgdir=p->pgdir
+  pgdir=p->pgdir;
   // guardo en pde donde esta almacenada la direccion de memoria en pgdir (la de la page table)
   // *pde es la direccion de la ptable
   // pde es la direccion ("cajita") de la dirrecion de la ptable
