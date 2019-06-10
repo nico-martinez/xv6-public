@@ -787,16 +787,12 @@ traducir(char* s)
 uint 
 traducir(char* s)
 {
-  const void *va = (void*)va_int;
+  const void *va = (void*)s;
   uint physical_address;
-  char bin[32]='';
-  int i=0;  
 
   struct proc *p=myproc();
   pde_t *pgdir,*pde; 
   pte_t *pgtab;
-  //pde directory pte table?
-  struct proc *p=myproc();
   pgdir=p->pgdir
   // guardo en pde donde esta almacenada la direccion de memoria en pgdir (la de la page table)
   // *pde es la direccion de la ptable
